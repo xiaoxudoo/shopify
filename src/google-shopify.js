@@ -183,7 +183,7 @@ const googleSearch = async function(
     await page.setDefaultNavigationTimeout(0);
     const keys = cateMap.keys()
     const reverseKeys = _.reverse(keys)
-    for (let key of keys) {
+    for (let key of reverseKeys) {
       // 更改UserAgent
       const agent = get_random_user_agent()
       console.log('\nuserAgent: ', agent)
