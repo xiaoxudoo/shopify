@@ -1,0 +1,213 @@
+/**
+ * 在无头浏览器自动填写表单并提交
+ */
+const puppeteer = require("puppeteer");
+const { readFile, saveFile, processLine, appendFile } = require("../utils/file.js");
+const sleep = require("../utils/sleep.js");
+const defaultUserAgent = 'Opera/9.51 (Windows NT 5.1; U; nn)' //"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36"
+const _ = require('lodash')
+
+let agentList = []
+let domainList = []
+let allLinks = []
+let allCateCount = 0
+let readyCateCount = 0
+const keywordPrefix = "site:myshopify.com worldwide shipping ";
+const url_search_num =
+  "https://${tld}/search?hl=${lang}&q=${query}&num=${num}&btnG=Google+Search";
+const url_next_page_num =
+  "https://${tld}/search?hl=${lang}&q=${query}&num=${num}&start=${start}";
+
+let codeFlag = false
+const get_random_user_agent = function() {
+  const seed = Math.floor(Math.random() * agentList.length)
+  return agentList[seed]
+}
+
+const randomDomain = function() {
+  return domainList[Math.floor(Math.random() * domainList.length)]
+}
+
+const readCategory = async function() {
+  const categories = await readFile("./aliexpress-catergories.json");
+  // console.log(categories);
+  const cateMap = new Map();
+  
+  categories.forEach((category, index) => {
+    category.children.forEach((subCate, subIdx) => {
+      subCate.children.forEach((thirdCate) => {
+        allCateCount++
+        if (thirdCate.state !== 'finished') {
+          const keyArr = [category.text, subCate.text, thirdCate.text]
+          cateMap.set(keyArr, [])
+        } else {
+          readyCateCount++
+        }
+      })
+    })
+  })
+  console.log('\nallCateCount: ', allCateCount)
+  console.log('\n Has Finished: ', Number(readyCateCount * 100/allCateCount).toFixed(2) + '%')
+  return cateMap
+};
+
+const modifyCategoryState = async function(path, many) {
+  const categories = await readFile("./aliexpress-catergories.json");
+  categories.forEach((category, index) => {
+    if (category.text === path[0]) {
+      category.children.forEach((subCate, subIdx) => {
+        if (subCate.text === path[1]) {
+          subCate.children.forEach((thirdCate) => {
+            if (thirdCate.text === path[2]) {
+              thirdCate.state = 'finished'
+              thirdCate.many = many
+              readyCateCount++
+              console.log('\n Has Finished: ', Number(readyCateCount * 100/allCateCount).toFixed(2) + '%')
+            }
+          })
+        }
+      })
+    }
+  })
+  await saveFile(categories, "./aliexpress-catergories.json");
+}
+
+const quote_plus = function(query) {
+  return encodeURIComponent(query).replace(/%20/g, "+");
+};
+
+const template = function(str, vars) {
+  Object.keys(vars).forEach(key => {
+    const value = vars[key]
+    str = str.replace("${" + key + "}", value)
+  })
+  return str
+};
+
+const randomSleep = async function() {
+  const ms = Math.floor(Math.random() * 60) + 30 // 30 ~ 60s
+  await sleep(ms * 1000)
+}
+
+const googleSearch = async function(
+  page,
+  query,
+  tld = "www.google.com",
+  start = 0,
+  stop = 800,
+  num = 100,
+  lang = "en"
+) {
+  query = quote_plus(keywordPrefix + query);
+  codeFlag = false // 每次请求一个关键字 都置false
+  let count = 0 // Count the number of links yielded.
+  let url;
+
+  // Prepare the URL of the first request.
+  if (start) {
+    url = template(url_next_page_num, { query, tld, start, num, lang });
+  } else {
+    url = template(url_search_num, { query, tld, start, num, lang });
+  }
+  
+  console.log('url', url);
+  while (start < stop) {
+    // 地址栏输入网页地址
+    await page.goto(url, {
+      waitUntil: "networkidle2" // 等待网络状态为空闲的时候才继续执行
+    });
+    
+    let aLinks = await page.evaluate(() => {
+      let as = [...document.querySelectorAll("a")];
+      const fas = as.filter(a => {
+        const hasShopify = /([^/]+.myshopify.com)/.test(a.href.trim())
+        const isSearch = decodeURIComponent(a.href).indexOf('site:myshopify.com') > -1 || a.href.indexOf('search') > -1
+        return hasShopify && !isSearch
+      })
+      return fas.map(a => {
+        return /([^/]+.myshopify.com)/.exec(a.href.trim())[0]
+      })
+    });
+
+    
+    // End if there are no more results. TODO review this logic, not sure if this is still true!
+    // 10 是经验值
+    if (aLinks.length < 10) {
+      const html = await page.content()
+      if (html.indexOf('unusual traffic') > -1) {
+        console.log('[-] Google又要你输验证码啦...')
+        codeFlag = true
+      }
+      break;
+    }
+
+    allLinks = allLinks.concat(_.uniq(aLinks));
+    // saveFile(allLinks, 'console.log')
+    count += aLinks.length;
+
+    console.log('count: ', count);
+    
+    // Prepare the URL for the next request.
+    start += num;
+    url = template(url_next_page_num, { query, tld, start, num, lang });
+    await randomSleep()
+  }
+};
+
+(async (url, path) => {
+  // 读取商家category
+  const cateMap = await readCategory()
+  // 读取userAgent
+  agentList =  await processLine("./user_agents.txt");
+  // console.log('userAgent', agentList);
+  domainList = await processLine("./domain.txt");
+  // console.log('domain', domainList);
+
+  // 启动浏览器
+  try {
+    const browser = await puppeteer.launch({
+      args: [
+        // '--proxy-server=121.232.194.163:9000',
+      ],
+      // 关闭无头模式，方便我们看到这个无头浏览器执行的过程
+      headless: false
+    });
+    // 打开页面
+    const page = await browser.newPage();
+    // 设置浏览器视窗
+    page.setViewport({
+      width: 1376,
+      height: 768
+    });
+
+    await page.setDefaultNavigationTimeout(0);
+    const keys = cateMap.keys()
+    const reverseKeys = _.reverse(keys)
+    for (let key of keys) {
+      // 更改UserAgent
+      const agent = get_random_user_agent()
+      console.log('\nuserAgent: ', agent)
+      await page.setUserAgent(agent);
+      const rdomain = randomDomain()
+      console.log('\ndomain: ', rdomain)
+      await googleSearch(page, key[2], rdomain);
+      if (allLinks.length > 0 && !codeFlag) {
+        await saveFile(allLinks, `./data/google-shopify/${key[0]}-${key[1]}-${key[2]}.txt`);
+        await appendFile(allLinks, 'result.txt');
+        await modifyCategoryState(key, allLinks.length)
+      }
+      allLinks = []
+      if (codeFlag) {
+        break
+      }
+      await sleep(120000) // 休息2min
+    }
+  } catch(e) {
+    console.log('error 时间：', new Date())
+
+    console.error(e)
+  }
+
+  // 不关闭浏览器，看看效果
+  // await browser.close();
+})()
