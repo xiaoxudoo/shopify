@@ -94,7 +94,7 @@ const googleSearch = async function(
   query,
   tld = "www.google.com",
   start = 0,
-  stop = 800,
+  stop = 700,
   num = 100,
   lang = "en"
 ) {
@@ -141,7 +141,7 @@ const googleSearch = async function(
       break;
     }
 
-    allLinks = allLinks.concat(_.uniq(aLinks));
+    allLinks = allLinks.concat(aLinks);
     // saveFile(allLinks, 'console.log')
     count += aLinks.length;
 
@@ -168,9 +168,10 @@ const googleSearch = async function(
     const browser = await puppeteer.launch({
       args: [
         // '--proxy-server=121.232.194.163:9000',
+	'--no-sandbox=','--disable-setuid-sandbox'
       ],
       // 关闭无头模式，方便我们看到这个无头浏览器执行的过程
-      headless: false
+      headless: true
     });
     // 打开页面
     const page = await browser.newPage();
@@ -181,9 +182,9 @@ const googleSearch = async function(
     });
 
     await page.setDefaultNavigationTimeout(0);
-    const keys = cateMap.keys()
+    const keys = [...cateMap.keys()]
     const reverseKeys = _.reverse(keys)
-    for (let key of keys) {
+    for (let key of cateMap.keys()) {
       // 更改UserAgent
       const agent = get_random_user_agent()
       console.log('\nuserAgent: ', agent)
@@ -200,7 +201,7 @@ const googleSearch = async function(
       if (codeFlag) {
         break
       }
-      await sleep(120000) // 休息2min
+      await randomSleep() // 休息2min
     }
   } catch(e) {
     console.log('error 时间：', new Date())
