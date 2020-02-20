@@ -1,4 +1,5 @@
-[{
+[
+  {
     "text": "Women's Fashion",
     "href": "//www.aliexpress.com/category/100003109/women-clothing-accessories.html",
     "children": [
@@ -16,37 +17,51 @@
           {
             "text": "Jackets",
             "href": "//www.aliexpress.com/category/200000926/jackets.html?spm=a2g0o.productlist.0.0.3ab83474jPZPDj&switch_new_app=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 322
           },
           {
             "text": "Hoodies & Sweatshirts",
             "href": "//www.aliexpress.com/category/100003141/hoodies-sweatshirts.html?site=glo&g=y&isrefine=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 310
           },
           {
             "text": "Sweaters",
             "href": "//www.aliexpress.com/category/200000783/sweaters.html",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 299
           },
           {
             "text": "Blouses & Shirts",
             "href": "//www.aliexpress.com/category/200001648/blouses-shirts.html",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 283
           },
           {
             "text": "Skirts",
             "href": "//www.aliexpress.com/category/100005798/skirts.html?spm=a2g0o.home.101.10.650c2c25zPZSW5&g=y&switch_new_app=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 299
           },
           {
             "text": "Sweatpants",
             "href": "//www.aliexpress.com/category/100003142/pants-capris.html?trafficChannel=main&catName=pants-capris&CatId=100003142&ltype=wholesale&SortType=default&page=1&pvid=100002012-60%3B100002012-100005991&isrefine=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 255
           },
           {
             "text": "Party Dresses",
             "href": "//www.aliexpress.com/category/200003482/dresses.html?trafficChannel=main&catName=dresses&CatId=200003482&ltype=wholesale&SortType=default&page=1&pvid=100004669-100013540%3B100004669-100013542%2C326-200004463&isrefine=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 284
           }
         ]
       },
@@ -57,32 +72,44 @@
           {
             "text": "Jeans",
             "href": "//www.aliexpress.com/category/100003161/jeans.html?g=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 292
           },
           {
             "text": "Pants & Capris",
             "href": "//www.aliexpress.com/category/100003142/pants-capris.html?g=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 275
           },
           {
             "text": "Leggings",
             "href": "//www.aliexpress.com/category/200001089/leggings.html?g=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 299
           },
           {
             "text": "Women's Socks",
             "href": "//www.aliexpress.com/category/200000781/women-socks-hosiery.html?spm=a2g0o.category_nav.1.388.307d48b6LEQ4uq&switch_new_app=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 298
           },
           {
             "text": "Shorts",
             "href": "//www.aliexpress.com/category/100003163/shorts.html?g=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 299
           },
           {
             "text": "Panties",
             "href": "//www.aliexpress.com/category/200001040/panties.html?spm=a2g0o.productlist.0.0.2ca66800Q1QxEm&switch_new_app=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 282
           }
         ]
       },
@@ -93,32 +120,44 @@
           {
             "text": "Jackets",
             "href": "//www.aliexpress.com/category/200000926/basic-jackets.html?g=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 321
           },
           {
             "text": "Blazers",
             "href": "//www.aliexpress.com/category/200000885/blazers.html?g=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 299
           },
           {
             "text": "Trench Coats",
             "href": "//www.aliexpress.com/category/200003458/trench.html?g=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 229
           },
           {
             "text": "Real Fur Items",
             "href": "//www.aliexpress.com/category/200217246/real-fur.html",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 190
           },
           {
             "text": "Parkas",
             "href": "//www.aliexpress.com/category/200003455/parkas.html",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 254
           },
           {
             "text": "Wool & Blends",
             "href": "//www.aliexpress.com/category/200003459/wool-blends.html?spm=a2g0o.productlist.0.0.672b3474oHIB81&switch_new_app=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 284
           },
           {
             "text": "Faux Fur",
@@ -697,7 +736,7 @@
       }
     ]
   },
-{
+  {
     "text": "ComputerOfficeSecurity",
     "href": "//www.aliexpress.com/category/7/computer-office.html",
     "children": [
