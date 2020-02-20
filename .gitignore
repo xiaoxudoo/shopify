@@ -4,6 +4,6 @@ data/
 demo/
 console.log
 result.txt
-google-shopify.log
+./google-shopify.log
 aliexpress-catergories.json
 *.bk

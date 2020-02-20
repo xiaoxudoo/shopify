@@ -85,7 +85,7 @@ const template = function(str, vars) {
 };
 
 const randomSleep = async function() {
-  const ms = Math.floor(Math.random() * 60) + 30 // 30 ~ 60s
+  const ms = Math.floor(Math.random() * 20) + 60 // 30 ~ 60s
   await sleep(ms * 1000)
 }
 
@@ -199,9 +199,10 @@ const googleSearch = async function(
       }
       allLinks = []
       if (codeFlag) {
-        break
+        await sleep(600000)
+	// break
       }
-      await randomSleep() // 休息2min
+      await sleep(90000) // 休息2min
     }
   } catch(e) {
     console.log('error 时间：', new Date())
