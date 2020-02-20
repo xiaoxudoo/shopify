@@ -3032,7 +3032,9 @@
           {
             "text": "Pumps",
             "href": "//sale.aliexpress.com/etcv8sTl6N.htm",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 285
           }
         ]
       },
@@ -3043,27 +3045,37 @@
           {
             "text": "Flashlights",
             "href": "//www.aliexpress.com/category/150410/flashlights-torches.html",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 222
           },
           {
             "text": "Solar Lamps",
             "href": "//www.aliexpress.com/category/39050207/solar-lamps.html",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 296
           },
           {
             "text": "Floodlights",
             "href": "//www.aliexpress.com/category/39050202/floodlights.html",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 48
           },
           {
             "text": "String Lights",
             "href": "//www.aliexpress.com/category/200003207/lighting-strings.html",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 292
           },
           {
             "text": "Underwater Lights",
             "href": "//www.aliexpress.com/category/39050210/underwater-lights.html",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 294
           }
         ]
       }

@@ -4,7 +4,7 @@
 const puppeteer = require("puppeteer");
 const { readFile, saveFile, processLine, appendFile } = require("../utils/file.js");
 const sleep = require("../utils/sleep.js");
-const defaultUserAgent = 'Opera/9.51 (Windows NT 5.1; U; nn)' //"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36"
+const defaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36"
 const _ = require('lodash')
 
 let agentList = []
@@ -76,6 +76,10 @@ const quote_plus = function(query) {
   return encodeURIComponent(query).replace(/%20/g, "+");
 };
 
+const log = async function(content) {
+  await saveFile(content, 'console.log')
+}
+
 const template = function(str, vars) {
   Object.keys(vars).forEach(key => {
     const value = vars[key]
@@ -94,7 +98,7 @@ const googleSearch = async function(
   query,
   tld = "www.google.com",
   start = 0,
-  stop = 800,
+  stop = 700,
   num = 100,
   lang = "en"
 ) {
@@ -170,7 +174,7 @@ const googleSearch = async function(
         // '--proxy-server=121.232.194.163:9000',
       ],
       // 关闭无头模式，方便我们看到这个无头浏览器执行的过程
-      headless: false
+      headless: true
     });
     // 打开页面
     const page = await browser.newPage();
@@ -181,7 +185,7 @@ const googleSearch = async function(
     });
 
     await page.setDefaultNavigationTimeout(0);
-    const keys = cateMap.keys()
+    const keys = [...cateMap.keys()]
     const reverseKeys = _.reverse(keys)
     for (let key of reverseKeys) {
       // 更改UserAgent
@@ -200,7 +204,7 @@ const googleSearch = async function(
       if (codeFlag) {
         break
       }
-      await sleep(60000) // 休息2min
+      await randomSleep()
     }
   } catch(e) {
     console.log('error 时间：', new Date())
