@@ -175,27 +175,37 @@
           {
             "text": "T-Shirts & Tops",
             "href": "//www.aliexpress.com/category/100003127/t-shirts.html?spm=a2g0o.productlist.0.0.4f8d835abUZkar&switch_new_app=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 299
           },
           {
             "text": "Cardigans",
             "href": "//www.aliexpress.com/category/200000877/cardigans.html?spm=a2g0o.productlist.0.0.3a302f8dcEsiCp&switch_new_app=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 287
           },
           {
             "text": "Women's Sets",
             "href": "//www.aliexpress.com/category/200118011/women-sets.html?trafficChannel=main&catName=women-sets&CatId=200118011&ltype=wholesale&SortType=default&pvid=100007732-200001500&isrefine=y&page=1",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 283
           },
           {
             "text": "",
             "href": "//www.aliexpress.com/category/200000782/suits-sets.html",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 386
           },
           {
             "text": "Jumpsuits",
             "href": "//www.aliexpress.com/category/200001092/jumpsuits.html",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 275
           },
           {
             "text": "Bra Sets",
