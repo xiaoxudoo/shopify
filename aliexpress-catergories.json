@@ -162,7 +162,9 @@
           {
             "text": "Faux Fur",
             "href": "//www.aliexpress.com/category/200003456/faux-fur.html?spm=a2g0o.productlist.0.0.15733cb3wGlhE7&switch_new_app=y",
-            "children": []
+            "children": [],
+            "state": "finished",
+            "many": 285
           }
         ]
       },
