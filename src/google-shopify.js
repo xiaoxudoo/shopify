@@ -141,7 +141,7 @@ const googleSearch = async function(
       break;
     }
 
-    allLinks = allLinks.concat(_.uniq(aLinks));
+    allLinks = allLinks.concat(aLinks);
     // saveFile(allLinks, 'console.log')
     count += aLinks.length;
 
@@ -200,7 +200,7 @@ const googleSearch = async function(
       if (codeFlag) {
         break
       }
-      await sleep(120000) // 休息2min
+      await sleep(60000) // 休息2min
     }
   } catch(e) {
     console.log('error 时间：', new Date())
