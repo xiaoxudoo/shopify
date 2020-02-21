@@ -51,6 +51,11 @@ const readCategory = async function() {
   return cateMap
 };
 
+const getCategoryFileName = function(keyArr) {
+  const fName = `./data/google-shopify/${keyArr[0]}-${keyArr[1]}-${keyArr[2].replace('/', '-')}.txt`
+  return fName
+}
+
 const modifyCategoryState = async function(path, many) {
   const categories = await readFile("./aliexpress-catergories.json");
   categories.forEach((category, index) => {
@@ -199,7 +204,7 @@ const googleSearch = async function(
       console.log('\ndomain: ', rdomain)
       await googleSearch(page, key[2], rdomain);
       if (allLinks.length > 0 && !codeFlag) {
-        await saveFile(allLinks, `./data/google-shopify/${key[0]}-${key[1]}-${key[2]}.txt`);
+        await saveFile(allLinks, getCategoryFileName(key));
         await appendFile(allLinks, 'result.txt');
         await modifyCategoryState(key, allLinks.length)
       }
@@ -215,7 +220,7 @@ const googleSearch = async function(
     console.error(e)
     
   }
-
+  await page.close()
   // 不关闭浏览器，看看效果
-  // await browser.close();
+  await browser.close();
 })()

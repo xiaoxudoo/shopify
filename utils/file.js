@@ -25,6 +25,10 @@ async function appendFile(content, fName) {
   //   await fsPromises.appendFile(fName, JSON.stringify(content, null, 2), {});
 }
 
+async function fileState(fName) {
+  return fsPromises.stat(fName)
+}
+
 async function processLine(fName) {
   const fileStream = fs.createReadStream(fName);
 
@@ -46,6 +50,7 @@ async function processLine(fName) {
 module.exports = {
   saveFile,
   readFile,
+  fileState,
   appendFile,
   processLine
 };
