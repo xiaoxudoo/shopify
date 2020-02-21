@@ -162,10 +162,10 @@ const googleSearch = async function(
   // console.log('userAgent', agentList);
   domainList = await processLine("./domain.txt");
   // console.log('domain', domainList);
-
+  let browser, page
   // 启动浏览器
   try {
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       args: [
         // '--proxy-server=121.232.194.163:9000',
 	'--no-sandbox=','--disable-setuid-sandbox'
@@ -174,7 +174,7 @@ const googleSearch = async function(
       headless: true
     });
     // 打开页面
-    const page = await browser.newPage();
+    page = await browser.newPage();
     // 设置浏览器视窗
     page.setViewport({
       width: 1376,
@@ -207,6 +207,29 @@ const googleSearch = async function(
     console.log('error 时间：', new Date())
 
     console.error(e)
+    
+    if (e.message.indexOf('TIMEOUT') > -1) {
+      const newCateMap = await readCategory()
+      for (let key of newCateMap.keys()) {
+        // 更改UserAgent
+        const agent = get_random_user_agent()
+        console.log('\nuserAgent: ', agent)
+        await page.setUserAgent(agent);
+        const rdomain = randomDomain()
+        console.log('\ndomain: ', rdomain)
+        await googleSearch(page, key[2], rdomain);
+        if (allLinks.length > 0 && !codeFlag) {
+          await saveFile(allLinks, `./data/google-shopify/${key[0]}-${key[1]}-${key[2]}.txt`);
+          await appendFile(allLinks, 'result.txt');
+          await modifyCategoryState(key, allLinks.length)
+        }
+        allLinks = []
+        if (codeFlag) {
+          break
+        }
+        await randomSleep() // 休息2min    
+      }  
+    }
   }
 
   // 不关闭浏览器，看看效果
