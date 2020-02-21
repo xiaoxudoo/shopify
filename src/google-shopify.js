@@ -62,6 +62,7 @@ const modifyCategoryState = async function(path, many) {
               thirdCate.state = 'finished'
               thirdCate.many = many
               readyCateCount++
+              console.log(new Date())
               console.log('\n Has Finished: ', Number(readyCateCount * 100/allCateCount).toFixed(2) + '%')
             }
           })
@@ -89,7 +90,7 @@ const template = function(str, vars) {
 };
 
 const randomSleep = async function() {
-  const ms = Math.floor(Math.random() * 60) + 30 // 30 ~ 60s
+  const ms = Math.floor(Math.random() * 10) + 60 // 30 ~ 60s
   await sleep(ms * 1000)
 }
 
@@ -166,10 +167,11 @@ const googleSearch = async function(
   // console.log('userAgent', agentList);
   domainList = await processLine("./domain.txt");
   // console.log('domain', domainList);
-
+  let browser
+  let page
   // 启动浏览器
   try {
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       args: [
         // '--proxy-server=121.232.194.163:9000',
       ],
@@ -177,7 +179,7 @@ const googleSearch = async function(
       headless: true
     });
     // 打开页面
-    const page = await browser.newPage();
+    page = await browser.newPage();
     // 设置浏览器视窗
     page.setViewport({
       width: 1376,
@@ -202,13 +204,12 @@ const googleSearch = async function(
       }
       allLinks = []
       if (codeFlag) {
-        break
+        await sleep(600000) // 被墙的话休息10min
       }
       await randomSleep()
     }
   } catch(e) {
     console.log('error 时间：', new Date())
-
     console.error(e)
   }
 
