@@ -175,26 +175,27 @@ const googleSearch = async function(
   let browser
   let page
   // 启动浏览器
-  try {
-    browser = await puppeteer.launch({
-      args: [
-        // '--proxy-server=121.232.194.163:9000',
-	'--no-sandbox=','--disable-setuid-sandbox'
-      ],
-      // 关闭无头模式，方便我们看到这个无头浏览器执行的过程
-      headless: true
-    });
-    // 打开页面
-    page = await browser.newPage();
-    // 设置浏览器视窗
-    page.setViewport({
-      width: 1376,
-      height: 768
-    });
+  
+  browser = await puppeteer.launch({
+    args: [
+      // '--proxy-server=121.232.194.163:9000',
+      // '--no-sandbox=','--disable-setuid-sandbox'
+    ],
+    // 关闭无头模式，方便我们看到这个无头浏览器执行的过程
+    headless: true
+  });
+  // 打开页面
+  page = await browser.newPage();
+  // 设置浏览器视窗
+  page.setViewport({
+    width: 1376,
+    height: 768
+  });
+  await page.setDefaultNavigationTimeout(0);
 
-    await page.setDefaultNavigationTimeout(0);
-    const keys = [...cateMap.keys()]
-    const reverseKeys = _.reverse(keys)
+  const RETRY_TIME = 2
+
+  try {  
     for (let key of cateMap.keys()) {
       // 更改UserAgent
       const agent = get_random_user_agent()
@@ -218,7 +219,6 @@ const googleSearch = async function(
   } catch(e) {
     console.log('error 时间：', new Date())
     console.error(e)
-    
   }
   await page.close()
   // 不关闭浏览器，看看效果
