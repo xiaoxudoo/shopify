@@ -4,7 +4,7 @@
 const puppeteer = require("puppeteer");
 const { readFile, saveFile, processLine, appendFile } = require("../utils/file.js");
 const sleep = require("../utils/sleep.js");
-const defaultUserAgent = 'Opera/9.51 (Windows NT 5.1; U; nn)' //"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36"
+const defaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36"
 const _ = require('lodash')
 
 let agentList = []
@@ -62,6 +62,7 @@ const modifyCategoryState = async function(path, many) {
               thirdCate.state = 'finished'
               thirdCate.many = many
               readyCateCount++
+              console.log(new Date())
               console.log('\n Has Finished: ', Number(readyCateCount * 100/allCateCount).toFixed(2) + '%')
             }
           })
@@ -76,6 +77,10 @@ const quote_plus = function(query) {
   return encodeURIComponent(query).replace(/%20/g, "+");
 };
 
+const log = async function(content) {
+  await saveFile(content, 'console.log')
+}
+
 const template = function(str, vars) {
   Object.keys(vars).forEach(key => {
     const value = vars[key]
@@ -85,7 +90,7 @@ const template = function(str, vars) {
 };
 
 const randomSleep = async function() {
-  const ms = Math.floor(Math.random() * 60) + 30 // 30 ~ 60s
+  const ms = Math.floor(Math.random() * 10) + 60 // 30 ~ 60s
   await sleep(ms * 1000)
 }
 
@@ -162,7 +167,8 @@ const googleSearch = async function(
   // console.log('userAgent', agentList);
   domainList = await processLine("./domain.txt");
   // console.log('domain', domainList);
-  let browser, page
+  let browser
+  let page
   // 启动浏览器
   try {
     browser = await puppeteer.launch({
@@ -199,37 +205,15 @@ const googleSearch = async function(
       }
       allLinks = []
       if (codeFlag) {
-        break
+        await sleep(600000)
+	      // break
       }
-      await randomSleep() // 休息2min
+      await sleep(90000) // 休息1.5min
     }
   } catch(e) {
     console.log('error 时间：', new Date())
-
     console.error(e)
     
-    if (e.message.indexOf('TIMEOUT') > -1) {
-      const newCateMap = await readCategory()
-      for (let key of newCateMap.keys()) {
-        // 更改UserAgent
-        const agent = get_random_user_agent()
-        console.log('\nuserAgent: ', agent)
-        await page.setUserAgent(agent);
-        const rdomain = randomDomain()
-        console.log('\ndomain: ', rdomain)
-        await googleSearch(page, key[2], rdomain);
-        if (allLinks.length > 0 && !codeFlag) {
-          await saveFile(allLinks, `./data/google-shopify/${key[0]}-${key[1]}-${key[2]}.txt`);
-          await appendFile(allLinks, 'result.txt');
-          await modifyCategoryState(key, allLinks.length)
-        }
-        allLinks = []
-        if (codeFlag) {
-          break
-        }
-        await randomSleep() // 休息2min    
-      }  
-    }
   }
 
   // 不关闭浏览器，看看效果

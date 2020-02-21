@@ -16,4 +16,3 @@ git config --global user.email "xiaoxudoo@126.com"
 git config --global user.name "xiaoxudoo" 
 # ps aux | grep node
 node src/google-shopify.js > google-shopify.log &
-kill -9 30625 30636 30638 30652 30654 30948

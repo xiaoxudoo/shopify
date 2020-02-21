@@ -12,6 +12,7 @@ function saveFile(content = [], fName = "default.json") {
 function readFile(fName) {
   return new Promise((resolve, reject) => {
     fs.readFile(fName, function(err, content) {
+      content = content || []
       resolve(JSON.parse(content));
     });
   });
