@@ -12,7 +12,7 @@ let domainList = []
 let allLinks = []
 let allCateCount = 0
 let readyCateCount = 0
-const keywordPrefix = "site:myshopify.com worldwide shipping ";
+const keywordPrefix = "site:myshopify.com ";
 const url_search_num =
   "https://${tld}/search?hl=${lang}&q=${query}&num=${num}&btnG=Google+Search";
 const url_next_page_num =
@@ -165,8 +165,6 @@ const googleSearch = async function(
 };
 
 (async (url, path) => {
-  // 读取商家category
-  const cateMap = await readCategory()
   // 读取userAgent
   agentList =  await processLine("./user_agents.txt");
   // console.log('userAgent', agentList);
@@ -193,31 +191,49 @@ const googleSearch = async function(
   });
   await page.setDefaultNavigationTimeout(0);
 
-  const RETRY_TIME = 2
-
-  try {  
-    for (let key of cateMap.keys()) {
-      // 更改UserAgent
-      const agent = get_random_user_agent()
-      console.log('\nuserAgent: ', agent)
-      await page.setUserAgent(agent);
-      const rdomain = randomDomain()
-      console.log('\ndomain: ', rdomain)
-      await googleSearch(page, key[2], rdomain);
-      if (allLinks.length > 0 && !codeFlag) {
-        await saveFile(allLinks, getCategoryFileName(key));
-        await appendFile(allLinks, 'result.txt');
-        await modifyCategoryState(key, allLinks.length)
+  const iterateCate = async function() {
+    // 读取商家category
+    let endFlag = false
+    // 迭代三次，防止网络超时
+    for await(let i of [1, 2, 3]) {
+      if (endFlag) {
+        return
       }
-      allLinks = []
-      if (codeFlag) {
-        await sleep(600000)
-	      // break
+      const cateMap = await readCategory()
+      try {
+        for (let key of cateMap.keys()) {
+          // 更改UserAgent
+          const agent = get_random_user_agent()
+          console.log('\nuserAgent: ', agent)
+          await page.setUserAgent(agent);
+          const rdomain = randomDomain()
+          console.log('\ndomain: ', rdomain)
+          await googleSearch(page, key[2], rdomain);
+          if (allLinks.length > 0 && !codeFlag) {
+            await saveFile(allLinks, getCategoryFileName(key));
+            await appendFile(allLinks, 'result.txt');
+            await modifyCategoryState(key, allLinks.length)
+          }
+          allLinks = []
+          if (codeFlag) {
+            await sleep(600000)
+            // break
+          }
+          await sleep(90000) // 休息1.5min
+        }
+        endFlag = true
+        console.log('finally end...')
+      } catch (err) {
+        endFlag = false
+        console.log('error 时间：', new Date())
+        console.error(e)
       }
-      await sleep(90000) // 休息1.5min
     }
+  }
+  
+  try {
+    await iterateCate()
   } catch(e) {
-    console.log('error 时间：', new Date())
     console.error(e)
   }
   await page.close()
