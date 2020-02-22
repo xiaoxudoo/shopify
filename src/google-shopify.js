@@ -218,7 +218,7 @@ const googleSearch = async function(
           }
           allLinks = []
           if (codeFlag) {
-            await sleep(600000)
+            // await sleep(600000)
             break
           }
           await sleep(90000) // 休息1.5min
