@@ -14,10 +14,11 @@ let allCateCount = 0
 let readyCateCount = 0
 const keywordPrefix = "site:myshopify.com ";
 const url_search_num =
-  "https://${tld}/search?hl=${lang}&q=${query}&num=${num}&btnG=Google+Search&filter=o";
+  "https://${tld}/search?hl=${lang}&q=${query}&num=${num}&btnG=Google+Search";
 const url_next_page_num =
-  "https://${tld}/search?hl=${lang}&q=${query}&num=${num}&start=${start}&filter=o";
-const langArr = ['en', 'nl', 'de', 'br']
+  "https://${tld}/search?hl=${lang}&q=${query}&num=${num}&start=${start}";
+const langArr = ['en', 'nl', 'de', 'pt-BR'] // 界面结果显示的语言
+const lrArr = ['lang_en', 'lang_nl', 'lang_de', 'lang_pt']      // 限制搜索结果的语言
 let codeFlag = false
 const get_random_user_agent = function() {
   const seed = Math.floor(Math.random() * agentList.length)
