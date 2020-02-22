@@ -25,7 +25,9 @@ const readCategory = async function() {
     category.children.forEach((subCate, subIdx) => {
       subCate.children.forEach(thirdCate => {
         const keyArr = [category.text, subCate.text, thirdCate.text];
-        cateArr.push(keyArr);
+        if (thirdCate.state === 'finished') {
+          cateArr.push(keyArr);
+        }
       });
     });
   });

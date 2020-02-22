@@ -14,10 +14,10 @@ let allCateCount = 0
 let readyCateCount = 0
 const keywordPrefix = "site:myshopify.com ";
 const url_search_num =
-  "https://${tld}/search?hl=${lang}&q=${query}&num=${num}&btnG=Google+Search";
+  "https://${tld}/search?hl=${lang}&q=${query}&num=${num}&btnG=Google+Search&filter=o";
 const url_next_page_num =
-  "https://${tld}/search?hl=${lang}&q=${query}&num=${num}&start=${start}";
-
+  "https://${tld}/search?hl=${lang}&q=${query}&num=${num}&start=${start}&filter=o";
+const langArr = ['en', 'nl', 'de', 'br']
 let codeFlag = false
 const get_random_user_agent = function() {
   const seed = Math.floor(Math.random() * agentList.length)
@@ -103,10 +103,10 @@ const googleSearch = async function(
   page,
   query,
   tld = "www.google.com",
+  lang = "en",
   start = 0,
   stop = 700,
-  num = 100,
-  lang = "en"
+  num = 100
 ) {
   query = quote_plus(keywordPrefix + query);
   codeFlag = false // 每次请求一个关键字 都置false
@@ -209,7 +209,7 @@ const googleSearch = async function(
           await page.setUserAgent(agent);
           const rdomain = randomDomain()
           console.log('\ndomain: ', rdomain)
-          await googleSearch(page, key[2], rdomain);
+          await googleSearch(page, key[2], rdomain, langArr[1]);
           if (allLinks.length > 0 && !codeFlag) {
             await saveFile(allLinks, getCategoryFileName(key));
             await appendFile(allLinks, 'result.txt');
@@ -227,7 +227,7 @@ const googleSearch = async function(
       } catch (err) {
         endFlag = false
         console.log('error 时间：', new Date())
-        console.error(e)
+        console.error(err)
       }
     }
   }
