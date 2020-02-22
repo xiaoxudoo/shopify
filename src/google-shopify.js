@@ -201,8 +201,8 @@ const googleSearch = async function(
       }
       const cateMap = await readCategory()
       try {
-	const reverseKeys = _.reverse([...cateMap.keys()])
-        for (let key of reverseKeys) {
+	      const reverseKeys = _.reverse([...cateMap.keys()])
+        for (let key of cateMap.keys()) {
           // 更改UserAgent
           const agent = get_random_user_agent()
           console.log('\nuserAgent: ', agent)
@@ -218,7 +218,7 @@ const googleSearch = async function(
           allLinks = []
           if (codeFlag) {
             await sleep(600000)
-            // break
+            break
           }
           await sleep(90000) // 休息1.5min
         }
