@@ -226,7 +226,7 @@ const googleSearch = async function(
       } catch (err) {
         endFlag = false
         console.log('error 时间：', new Date())
-        console.error(e)
+        console.error(err)
       }
     }
   }
