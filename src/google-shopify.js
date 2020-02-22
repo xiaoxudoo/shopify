@@ -177,7 +177,7 @@ const googleSearch = async function(
   browser = await puppeteer.launch({
     args: [
       // '--proxy-server=121.232.194.163:9000',
-      // '--no-sandbox=','--disable-setuid-sandbox'
+       '--no-sandbox=','--disable-setuid-sandbox'
     ],
     // 关闭无头模式，方便我们看到这个无头浏览器执行的过程
     headless: true
@@ -201,7 +201,8 @@ const googleSearch = async function(
       }
       const cateMap = await readCategory()
       try {
-        for (let key of cateMap.keys()) {
+	const reverseKeys = _.reverse([...cateMap.keys()])
+        for (let key of reverseKeys) {
           // 更改UserAgent
           const agent = get_random_user_agent()
           console.log('\nuserAgent: ', agent)
