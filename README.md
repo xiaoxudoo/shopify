@@ -13,3 +13,14 @@ node src/google-shopify.js > google-shopify.log &
 ```bash
 npm run analysis
 ```
+
+### 入库
+```bash
+npm run mysql
+```
+
+### 参考文章，reference
+
+1. https://python-googlesearch.readthedocs.io/en/latest/
+
+2. https://blog.zfanw.com/google-search-url-parameters/
