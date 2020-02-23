@@ -210,7 +210,7 @@ const googleSearch = async function(
           await page.setUserAgent(agent);
           const rdomain = randomDomain()
           console.log('\ndomain: ', rdomain)
-          await googleSearch(page, key[2], rdomain, langArr[1]);
+          await googleSearch(page, key[2], rdomain, langArr[2]);
           if (allLinks.length > 0 && !codeFlag) {
             await saveFile(allLinks, getCategoryFileName(key));
             await appendFile(allLinks, 'result.txt');
