@@ -1,9 +1,10 @@
 const mysql = require("mysql");
 const _ = require("lodash");
 const { readFile } = require("../utils/file.js");
-const IS_WW_SHIP = true;
-const LANG = 'en';
-const QUERY = 'site:myshopify.com worldwide shipping '
+const IS_WW_SHIP = false;
+const LANG = 'pt';
+const langArr = ['en']
+const QUERY = "site:myshopify.com worldwide shipping ";
 const getCategoryFileName = function(keyArr, lang = "en") {
   const path = `${keyArr[0]}-${keyArr[1]}-${keyArr[2].replace("/", "-")}`;
   return {
@@ -60,22 +61,24 @@ const getConnectPool = function () {
     const start = new Date().getTime();
 
     const cateArr = await readCategory();
-    for await (const cates of cateArr) {
-      const { path, keyword, fName } = getCategoryFileName(cates, LANG);
-      console.log(fName)
-      const domainList = await readFile(fName);
-      // 每一条数据都插入mysql
-      const options = {
-        domain: '',
-        category: path,
-        keyword: QUERY + keyword,
-        is_ww_ship: IS_WW_SHIP,
-        hl: LANG
-      }
-      for await (let domain of domainList) {
-        options.domain = domain
-        // console.log(options)
-        await queryPromise('INSERT INTO shopify_domain SET ?', options)
+    for await (let lang of langArr) {
+      for await (const cates of cateArr) {
+        const { path, keyword, fName } = getCategoryFileName(cates, lang);
+        console.log(fName)
+        const domainList = await readFile(fName);
+        // 每一条数据都插入mysql
+        const options = {
+          domain: '',
+          category: path,
+          keyword: QUERY + keyword,
+          is_ww_ship: IS_WW_SHIP,
+          hl: lang
+        }
+        for await (let domain of domainList) {
+          options.domain = domain
+          // console.log(options)
+          await queryPromise('INSERT INTO shopify_domain SET ?', options)
+        }
       }
     }
 
