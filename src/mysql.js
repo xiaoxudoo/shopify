@@ -3,11 +3,11 @@ const _ = require("lodash");
 const { readFile } = require("../utils/file.js");
 const IS_WW_SHIP = true;
 const langArr = ['en']
-const QUERY = "site:myshopify.com ";
+const QUERY = "site:myshopify.com worldwide shipping ";
 
 // const IS_WW_SHIP = false;
 // const langArr = ['en', 'nl', 'de', 'pt']
-// const QUERY = "site:myshopify.com worldwide shipping ";
+// const QUERY = "site:myshopify.com ";
 
 const getCategoryFileName = function(keyArr, lang = "en") {
   const path = `${keyArr[0]}-${keyArr[1]}-${keyArr[2].replace("/", "-")}`;
