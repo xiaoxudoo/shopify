@@ -5,6 +5,7 @@
 mkdir data
 mkdir data/google-shopify
 echo '[]' > result.txt
+cp aliexpress-catergories.json.origin aliexpress-catergories.json
 node src/google-shopify.js > google-shopify.log &
 ```
 

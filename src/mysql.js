@@ -1,10 +1,16 @@
 const mysql = require("mysql");
 const _ = require("lodash");
-const { readFile, saveFile, appendFile } = require("../utils/file.js");
-
-const getCategoryFileName = function(keyArr) {
+const { readFile } = require("../utils/file.js");
+const IS_WW_SHIP = false;
+const LANG = 'pt';
+const QUERY = 'site:myshopify.com '
+const getCategoryFileName = function(keyArr, lang = "en") {
   const path = `${keyArr[0]}-${keyArr[1]}-${keyArr[2].replace("/", "-")}`;
-  return `./data/google-shopify/${path}.txt`;
+  return {
+    path,
+    keyword: keyArr[2],
+    fName: `./data/collect/collect.${lang}/google-shopify/${path}.txt`
+  };
 };
 
 const readCategory = async function() {
@@ -23,20 +29,25 @@ const readCategory = async function() {
   return cateArr;
 };
 
+const getConnectPool = function () {
+  const pool = mysql.createPool({
+    connectionLimit : 10,
+    host: "localhost",
+    user: "root",
+    password: "xiaoxudoo@126",
+    database: "google_shopify"
+  });
+
+  return pool
+};
+
 (async function() {
   try {
-    const connection = mysql.createConnection({
-      host: "localhost",
-      user: "root",
-      password: "xiaoxudoo@126",
-      database: "google_shopify"
-    });
+    const pool = getConnectPool()
 
-    connection.connect();
-
-    const queryPromise = function(query) {
+    const queryPromise = function(query, options = {}) {
       return new Promise((resolve, reject) => {
-        connection.query(query, function(error, results, fields) {
+        pool.query(query, options, function(error, results, fields) {
           if (error) {
             reject(error);
           }
@@ -49,11 +60,25 @@ const readCategory = async function() {
     const start = new Date().getTime();
 
     const cateArr = await readCategory();
+    for await (const cates of cateArr) {
+      const { path, keyword, fName } = getCategoryFileName(cates, LANG);
+      console.log(fName)
+      const domainList = await readFile(fName);
+      // 每一条数据都插入mysql
+      const options = {
+        domain: '',
+        category: path,
+        keyword: QUERY + keyword,
+        is_ww_ship: IS_WW_SHIP,
+        hl: LANG
+      }
+      for await (let domain of domainList) {
+        options.domain = domain
+        // console.log(options)
+        await queryPromise('INSERT INTO shopify_domain SET ?', options)
+      }
+    }
 
-    
-    
-
-    connection.end();
     const end = new Date().getTime();
     console.log("end ", new Date().toLocaleString());
     console.log("spend time: ", end - start);
