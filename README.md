@@ -24,3 +24,5 @@ npm run mysql
 1. https://python-googlesearch.readthedocs.io/en/latest/
 
 2. https://blog.zfanw.com/google-search-url-parameters/
+
+3. https://answer-id.com/53460389

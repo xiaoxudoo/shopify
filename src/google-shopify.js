@@ -17,8 +17,14 @@ const url_search_num =
   "https://${tld}/search?hl=${lang}&q=${query}&num=${num}&btnG=Google+Search";
 const url_next_page_num =
   "https://${tld}/search?hl=${lang}&q=${query}&num=${num}&start=${start}";
+const url_search_num_lr =
+  "https://${tld}/search?lr=${langrestrict}&q=${query}&num=${num}&btnG=Google+Search";
+const url_next_page_num_lr =
+  "https://${tld}/search?lr=${langrestrict}&q=${query}&num=${num}&start=${start}";
+
 const langArr = ['en', 'nl', 'de', 'pt-BR'] // 界面结果显示的语言
 const lrArr = ['lang_en', 'lang_nl', 'lang_de', 'lang_pt']      // 限制搜索结果的语言
+
 let codeFlag = false
 const get_random_user_agent = function() {
   const seed = Math.floor(Math.random() * agentList.length)
@@ -96,7 +102,7 @@ const template = function(str, vars) {
 };
 
 const randomSleep = async function() {
-  const ms = Math.floor(Math.random() * 10) + 60 // 30 ~ 60s
+  const ms = Math.floor(Math.random() * 10) + 60 // 60 ~ 70s
   await sleep(ms * 1000)
 }
 
@@ -104,7 +110,8 @@ const googleSearch = async function(
   page,
   query,
   tld = "www.google.com",
-  lang = "en",
+  lang,
+  langrestrict,
   start = 0,
   stop = 700,
   num = 100
@@ -116,9 +123,17 @@ const googleSearch = async function(
 
   // Prepare the URL of the first request.
   if (start) {
-    url = template(url_next_page_num, { query, tld, start, num, lang });
+    if (langrestrict) {
+      url = template(url_next_page_num_lr, { query, tld, start, num, langrestrict });
+    } else {
+      url = template(url_next_page_num, { query, tld, start, num, lang });
+    }
   } else {
-    url = template(url_search_num, { query, tld, start, num, lang });
+    if (langrestrict) {
+      url = template(url_search_num_lr, { query, tld, start, num, langrestrict });
+    } else {
+      url = template(url_search_num, { query, tld, start, num, lang });
+    }
   }
   
   console.log('url', url);
@@ -210,7 +225,7 @@ const googleSearch = async function(
           await page.setUserAgent(agent);
           const rdomain = randomDomain()
           console.log('\ndomain: ', rdomain)
-          await googleSearch(page, key[2], rdomain, langArr[2]);
+          await googleSearch(page, key[2], rdomain, null, lrArr[0]);
           if (allLinks.length > 0 && !codeFlag) {
             await saveFile(allLinks, getCategoryFileName(key));
             await appendFile(allLinks, 'result.txt');
