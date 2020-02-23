@@ -16,3 +16,10 @@ git config --global user.email "xiaoxudoo@126.com"
 git config --global user.name "xiaoxudoo" 
 # ps aux | grep node
 node src/google-shopify.js > google-shopify.log &
+ps aux | grep node | awk '{ print $2; cmd="kill -9 "$2; system(cmd) }'
+
+mysql -u root -p xiaoxudoo@126 / 123
+show databases;
+create database google_shopify;
+use google_shopify;
+show tables;
