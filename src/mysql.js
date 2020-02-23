@@ -1,21 +1,26 @@
 const mysql = require("mysql");
 const _ = require("lodash");
 const { readFile } = require("../utils/file.js");
+// const IS_WW_SHIP = true;
+// const langArr = ['en']
+// const QUERY = "site:myshopify.com worldwide shipping ";
+
 const IS_WW_SHIP = false;
-const LANG = 'pt';
 const langArr = ['en', 'nl', 'de', 'pt']
-const QUERY = 'site:myshopify.com '
+const QUERY = "site:myshopify.com ";
+
 const getCategoryFileName = function(keyArr, lang = "en") {
   const path = `${keyArr[0]}-${keyArr[1]}-${keyArr[2].replace("/", "-")}`;
   return {
     path,
     keyword: keyArr[2],
-    fName: `./data/collect/collect.${lang}/google-shopify/${path}.txt`
+    fName: `./data/collect/collect.${lang}${IS_WW_SHIP ? '.wwship' : ''}/google-shopify/${path}.txt`
   };
 };
 
-const readCategory = async function() {
-  const categories = await readFile("./aliexpress-catergories.json");
+const readCategory = async function(lang) {
+  const fName = `./data/collect/collect.${lang}${IS_WW_SHIP ? '.wwship' : ''}/aliexpress-catergories.json`;
+  const categories = await readFile(fName);
   // console.log(categories);
   const cateArr = [];
 
@@ -60,8 +65,9 @@ const getConnectPool = function () {
     console.log("start ", new Date().toLocaleString());
     const start = new Date().getTime();
 
-    const cateArr = await readCategory();
+    
     for await (let lang of langArr) {
+      const cateArr = await readCategory(lang);
       for await (const cates of cateArr) {
         const { path, keyword, fName } = getCategoryFileName(cates, lang);
         console.log(fName)
