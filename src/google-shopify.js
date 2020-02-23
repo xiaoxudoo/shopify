@@ -37,6 +37,9 @@ const readCategory = async function() {
     category.children.forEach((subCate, subIdx) => {
       subCate.children.forEach((thirdCate) => {
         allCateCount++
+        if (thirdCate.text.indexOf('/') > -1) {
+          console.log([category.text, subCate.text, thirdCate.text])
+        }
         if (thirdCate.state !== 'finished') {
           const keyArr = [category.text, subCate.text, thirdCate.text]
           cateMap.set(keyArr, [])
@@ -95,9 +98,9 @@ const template = function(str, vars) {
 };
 
 const randomSleep = async function() {
-  const ms = Math.floor(Math.random() * 10) + 60 // 30 ~ 60s
+  const ms = 1 // Math.floor(Math.random() * 10) + 60 // 30 ~ 60s
   await sleep(ms * 1000)
-}
+};
 
 const googleSearch = async function(
   page,
@@ -213,7 +216,7 @@ const googleSearch = async function(
         await sleep(600000)
 	      // break
       }
-      await sleep(90000) // 休息1.5min
+      // await sleep(90000) // 休息1.5min
     }
   } catch(e) {
     console.log('error 时间：', new Date())
