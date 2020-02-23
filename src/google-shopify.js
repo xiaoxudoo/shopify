@@ -203,7 +203,7 @@ const googleSearch = async function(
       const cateMap = await readCategory()
       try {
 	      const reverseKeys = _.reverse([...cateMap.keys()])
-        for (let key of cateMap.keys()) {
+        for (let key of reverseKeys) {
           // 更改UserAgent
           const agent = get_random_user_agent()
           console.log('\nuserAgent: ', agent)
