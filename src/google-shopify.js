@@ -203,14 +203,14 @@ const googleSearch = async function(
       const cateMap = await readCategory()
       try {
 	      const reverseKeys = _.reverse([...cateMap.keys()])
-        for (let key of cateMap.keys()) {
+        for (let key of reverseKeys) {
           // 更改UserAgent
           const agent = get_random_user_agent()
           console.log('\nuserAgent: ', agent)
           await page.setUserAgent(agent);
           const rdomain = randomDomain()
           console.log('\ndomain: ', rdomain)
-          await googleSearch(page, key[2], rdomain, langArr[3]);
+          await googleSearch(page, key[2], rdomain, langArr[2]);
           if (allLinks.length > 0 && !codeFlag) {
             await saveFile(allLinks, getCategoryFileName(key));
             await appendFile(allLinks, 'result.txt');
