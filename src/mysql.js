@@ -72,7 +72,7 @@ const getConnectPool = function () {
           category: path,
           keyword: QUERY + keyword,
           is_ww_ship: IS_WW_SHIP,
-          hl: LANG
+          hl: lang
         }
         for await (let domain of domainList) {
           options.domain = domain
