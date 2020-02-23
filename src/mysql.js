@@ -1,7 +1,7 @@
 const mysql = require("mysql");
 const _ = require("lodash");
 const { readFile } = require("../utils/file.js");
-const IS_WW_SHIP = false;
+const IS_WW_SHIP = true;
 const LANG = 'pt';
 const langArr = ['en']
 const QUERY = "site:myshopify.com worldwide shipping ";
