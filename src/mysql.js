@@ -47,6 +47,8 @@ const getConnectPool = function () {
   return pool
 };
 
+
+
 (async function() {
   try {
     const pool = getConnectPool()
@@ -62,31 +64,59 @@ const getConnectPool = function () {
       });
     };
 
-    console.log("start ", new Date().toLocaleString());
-    const start = new Date().getTime();
-
-    
-    for await (let lang of langArr) {
-      const cateArr = await readCategory(lang);
-      for await (const cates of cateArr) {
-        const { path, keyword, fName } = getCategoryFileName(cates, lang);
-        console.log(fName)
-        const domainList = await readFile(fName);
-        // 每一条数据都插入mysql
-        const options = {
-          domain: '',
-          category: path,
-          keyword: QUERY + keyword,
-          is_ww_ship: IS_WW_SHIP,
-          hl: lang
-        }
-        for await (let domain of domainList) {
-          options.domain = domain
-          // console.log(options)
-          await queryPromise('INSERT INTO shopify_domain SET ?', options)
+    const sqlDomain = async function() {
+      for await (let lang of langArr) {
+        const cateArr = await readCategory(lang);
+        for await (const cates of cateArr) {
+          const { path, keyword, fName } = getCategoryFileName(cates, lang);
+          console.log(fName)
+          const domainList = await readFile(fName);
+          // 每一条数据都插入mysql
+          const options = {
+            domain: '',
+            category: path,
+            keyword: QUERY + keyword,
+            is_ww_ship: IS_WW_SHIP,
+            hl: lang
+          }
+          for await (let domain of domainList) {
+            options.domain = domain
+            // console.log(options)
+            await queryPromise('INSERT INTO shopify_domain SET ?', options)
+          }
         }
       }
     }
+
+    const sqlCategory = async function() {
+      const categories = await readFile('./aliexpress-catergories.json.origin');
+      let i = -1, j = -1, k = -1;
+      for await (let firstCate of categories) {
+        i++;
+        for await (let subCate of firstCate.children) {
+          j++;
+          for await (let thirdCate of subCate.children) {
+            k++;
+            const options = {
+              first_level_id: i,
+              first_level_name: firstCate.text,
+              second_level_id: j,
+              second_level_name: subCate.text,
+              third_level_id: k,
+              third_level_name: thirdCate.text
+            }
+            await queryPromise('INSERT INTO aliexpress_category SET ?', options)
+          }
+        }
+      }
+    }
+
+    console.log("start ", new Date().toLocaleString());
+    const start = new Date().getTime();
+
+    // await sqlDomain()
+
+    await sqlCategory()
 
     const end = new Date().getTime();
     console.log("end ", new Date().toLocaleString());
