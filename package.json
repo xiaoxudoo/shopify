@@ -7,6 +7,7 @@
     "es6": "rm -rf ./data/es6-pdf/* && node demo/es6-crawler.js",
     "sf2juejin": "node demo/sf2juejin.js",
     "shopify": "node src/google-shopify.js",
+    "baike": "node src/baike.js",
     "analysis": "node src/analysis.js"
   },
   "author": "",
